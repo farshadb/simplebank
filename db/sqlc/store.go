@@ -62,7 +62,7 @@ type TransferTxResult struct {
 
 // ? TransferTx perform a money transfer form one account to the other.
 // ? It creates a tansfer record, add account enteries, and update account's balance witin a single database tansactions
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, err) {
+func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
 	// this is callback function
