@@ -25,7 +25,7 @@ func (q *Queries) CreateEntry(ctx context.Context, arg CreateEntryParams) (Entry
 	row := q.db.QueryRowContext(ctx, createEntry, arg.AccountID, arg.Amount)
 	var i Entry
 	err := row.Scan(
-		&i.ID, 
+		&i.ID,
 		&i.AccountID,
 		&i.Amount,
 		&i.CreatedAt,
