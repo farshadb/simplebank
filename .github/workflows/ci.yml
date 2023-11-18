@@ -55,7 +55,7 @@ jobs:
           sudo -u postgres PGPASSWORD=$PGPASSWORD psql -U postgres -h localhost -d simple_bank -w -c "ALTER USER root WITH PASSWORD 'postgres';"
         env:
           PGHOST: localhost
-          PGUSER: root
+          PGUSER: postgres
           PGPASSWORD: postgres
           PGDATABASE: simple_bank
 
