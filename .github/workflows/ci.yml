@@ -49,9 +49,6 @@ jobs:
           sudo systemctl restart postgresql
           sudo systemctl status postgresql
 
-      - name: Check PostgreSQL connection
-        run: psql -U root -h localhost -d simple_bank -W -c "SELECT 1;"
-
       - name: Check postgres password
         run: |
           docker exec -it postgres cat /var/lib/postgresql/data/postgresql.conf | grep password
