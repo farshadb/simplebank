@@ -51,6 +51,9 @@ jobs:
 
       - name: Set PostgreSQL root password
         run: |
+          sudo apt-get update
+          sudo apt-get install postgresql-client
+
           export PGPASSWORD=postgres
           sudo -u postgres PGPASSWORD=$PGPASSWORD psql -U postgres -h localhost -d simple_bank -w -c "ALTER USER root WITH PASSWORD 'postgres';"
         env:
