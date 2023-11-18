@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     services:
       postgres:
@@ -47,6 +47,23 @@ jobs:
 
       - name: Build
         run: go build -v ./...
+
+      - name: Check postgres status
+        run: |
+          sudo systemctl enable postgresql
+          sudo systemctl restart postgresql
+          sudo systemctl status postgresql
+
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+          go get finding module for package github.com/stretchr/testify/require
+          go get finding module for package github.com/lib/pq
+          go get github.com/lib/pq in github.com/lib/pq v1.10.9
+          go get github.com/stretchr/testify/require in github.com/stretchr/testify v1.8.4
+
+      - name: Tidy
+        run: go mod tidy
 
       - name: Test
         run: go test -v ./...
