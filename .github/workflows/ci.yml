@@ -51,7 +51,6 @@ jobs:
 
       - name: Check postgres password
         run: |
-          docker exec -it postgres cat /var/lib/postgresql/data/postgresql.conf | grep password
           psql -U postgres -h localhost
           SELECT * FROM pg_shadow WHERE usename='root';
 
