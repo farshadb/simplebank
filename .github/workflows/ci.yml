@@ -49,11 +49,6 @@ jobs:
           sudo systemctl restart postgresql
           sudo systemctl status postgresql
 
-      - name: Check postgres password
-        run: |
-          psql -U postgres -h localhost
-          SELECT * FROM pg_shadow WHERE usename='root';
-
       - name: Set PostgreSQL root password
         run: |
           docker exec postgres psql -U root -c "ALTER USER root WITH PASSWORD 'postgres';"
