@@ -60,14 +60,5 @@ jobs:
       - name: Tidy
         run: go mod tidy
 
-      - name: Build
-        run: go build -v ./...
-
       - name: Test
         run: make test
-
-      #- name: Check postgres status
-      #  run: sudo systemctl status postgres
-
-      # - name: Test
-      #   run: go test -v -cover -race ./...
