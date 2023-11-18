@@ -49,8 +49,5 @@ jobs:
           sudo systemctl restart postgresql
           sudo systemctl status postgresql
 
-      - name: Show PostgreSQL Users
-        run: psql -h localhost -U roots -d simple_bank -c "\du"
-
       - name: Test
         run: make test
