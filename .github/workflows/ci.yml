@@ -45,9 +45,6 @@ jobs:
       - name: Run migrations
         run: make migrateup
 
-      - name: Build
-        run: go build -v ./...
-
       - name: Check postgres status
         run: |
           sudo systemctl enable postgresql
@@ -56,14 +53,15 @@ jobs:
 
       - name: Get dependencies
         run: |
-          go get -v -t -d ./...
-          go get finding module for package github.com/stretchr/testify/require
-          go get finding module for package github.com/lib/pq
-          go get github.com/lib/pq in github.com/lib/pq v1.10.9
-          go get github.com/stretchr/testify/require in github.com/stretchr/testify v1.8.4
+          go get github.com/stretchr/testify/require
+          go get github.com/lib/pq
+          go get github.com/stretchr/testify/require
 
       - name: Tidy
         run: go mod tidy
+
+      - name: Build
+        run: go build -v ./...
 
       - name: Test
         run: go test -v ./...
