@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     services:
       postgres:
@@ -44,10 +44,7 @@ jobs:
         run: make migrateup
 
       - name: Check postgres status
-        run: |
-          sudo systemctl enable postgresql
-          sudo systemctl restart postgresql
-          sudo systemctl status postgre
+        run: sudo systemctl status postgres
 
       - name: Test
         run: go test -v -cover -race ./...
