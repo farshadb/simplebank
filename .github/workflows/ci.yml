@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     services:
       postgres:
@@ -29,7 +29,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.21"
+          go-version: "1.21.4"
 
       - name: Check out code into the Go mudule directory
         uses: actions/checkout@v3
@@ -47,10 +47,7 @@ jobs:
         run: |
           sudo systemctl enable postgresql
           sudo systemctl restart postgresql
-          sudo systemctl status postgresql
+          sudo systemctl status postgre
 
       - name: Test
-        run: go test -v -cover -short ./...
-
-      - name: Show PostgreSQL logs
-        run: docker logs postgres
+        run: go test -v -cover -race ./...
