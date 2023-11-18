@@ -50,13 +50,7 @@ jobs:
           sudo systemctl status postgresql
 
       - name: Set PostgreSQL root password
-        run: |
-          docker exec postgres psql -U root -c "ALTER USER root WITH PASSWORD 'postgres';"
-        env:
-          PGHOST: localhost
-          PGUSER: root
-          PGPASSWORD: postgres
-          PGDATABASE: simple_bank
+        run: sudo -u postgres psql -U postgres -c "ALTER USER root WITH PASSWORD 'postgres';" -h localhost -d simple_bank
 
       - name: Test
         run: make test
