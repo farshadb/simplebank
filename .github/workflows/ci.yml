@@ -49,13 +49,15 @@ jobs:
           sudo systemctl restart postgresql
           sudo systemctl status postgresql
 
-      - name: Set PostgreSQL root password
+      - name: Install postgres client
         run: |
           sudo apt-get update
           sudo apt-get install postgresql-client
 
+      - name: Set Password
+        run: |
           export PGPASSWORD=postgres
-          sudo -u postgres PGPASSWORD=$PGPASSWORD psql -U postgres -h localhost -d simple_bank -w -c "ALTER USER root WITH PASSWORD 'postgres';"
+          sudo -u postgres psql -U postgres -h localhost -d postgres -c "ALTER USER root WITH PASSWORD 'postgres';"
         env:
           PGHOST: localhost
           PGUSER: postgres
