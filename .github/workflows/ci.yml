@@ -49,13 +49,8 @@ jobs:
           sudo systemctl restart postgresql
           sudo systemctl status postgresql
 
-      - name: Install postgres client
-        run: |
-          sudo apt-get update
-          sudo apt-get install postgresql-client
-
       - name: Test
-        run: make test
+        run: go test -v -cover -race ./...
 
       - name: Show PostgreSQL logs
         run: docker logs postgres
