@@ -15,7 +15,7 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: postgres
+          POSTGRES_USER: root
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: simple_bank
         ports:
@@ -49,5 +49,26 @@ jobs:
           sudo systemctl restart postgresql
           sudo systemctl status postgresql
 
+      - name: Check PostgreSQL connection
+        run: psql -U root -h localhost -d simple_bank -c "SELECT 1;"
+
+      - name: Check postgres password
+        run: |
+          docker exec -it postgres cat /var/lib/postgresql/data/postgresql.conf | grep password
+          psql -U postgres -h localhost
+          SELECT * FROM pg_shadow WHERE usename='root';
+
+      - name: Set PostgreSQL root password
+        run: |
+          docker exec postgres psql -U root -c "ALTER USER root WITH PASSWORD 'your_new_password';"
+        env:
+          PGHOST: localhost
+          PGUSER: root
+          PGPASSWORD: postgres
+          PGDATABASE: simple_bank
+
       - name: Test
         run: make test
+
+      - name: Show PostgreSQL logs
+        run: docker logs postgres
