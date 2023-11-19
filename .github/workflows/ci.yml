@@ -78,4 +78,8 @@ jobs:
         run: go mod tidy
 
       - name: Test
-        run: go test -v -cover -race ./...
+        run: PGPASSWORD=$POSTGRES_PASSWORD go test -v -cover -race ./...
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
