@@ -13,11 +13,12 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16-alpine
+        image: postgres:latest
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: simplebank
+          POSTGRES_PORT: 5432
         ports:
           - 5432:5432
         options: >-
@@ -42,6 +43,19 @@ jobs:
           sudo mv migrate /bin/migrate
           which migrate
 
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-clien
+
+        # queries database with postgres client
+      - name: Query database
+        run: psql -h postgres -d simplebank -U root -c 'SELECT 1;'
+        env:
+          # postgress password is required; alternatively, you can run:
+          # `PGPASSWORD=postgres_password psql ...`
+          PGPASSWORD: postgres
+
       - name: Run migrations
         run: make migrateup
 
@@ -61,4 +75,4 @@ jobs:
         run: go mod tidy
 
       - name: Test
-        run: make test
+        run: go test -v -cover -race ./...
