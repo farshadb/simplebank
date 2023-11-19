@@ -50,11 +50,13 @@ jobs:
 
         # queries database with postgres client
       - name: Query database
-        run: psql -h postgres -d simplebank -U root -c 'SELECT 1;'
+        run: psql -h localhost -d simplebank -U root -c 'SELECT 1;'
         env:
           # postgress password is required; alternatively, you can run:
           # `PGPASSWORD=postgres_password psql ...`
-          PGPASSWORD: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
 
       - name: Run migrations
         run: make migrateup
