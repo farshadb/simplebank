@@ -1,13 +1,17 @@
 postgres:
-	docker run --name=bank2 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:16
+	docker run --name=bank -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:16
+
+localpostgres:
+	docker run --name=bank -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_HOST_AUTH_METHOD=trust -d postgres:16
+
 mysql:
 	docker run --name mysql8 -p 3306:3306 -e MYSQL_PASSWORD=something -d mysql:8.2
 
 createdb:
-	docker exec -it bank2 createdb --username=root --owner=root simplebank
+	docker exec -it bank createdb --username=root --owner=root simplebank
 
 dropdb:
-	docker exec -it bank2 dropdb simplebank
+	docker exec -it bank dropdb simplebank
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simplebank?sslmode=disable" -verbose up
 
@@ -23,4 +27,4 @@ test:
 server: 
 	go run main.go
 
-.PHONY:	postgres mysql createdb dropdb migrateup migratedown sqlc test server
+.PHONY:	postgres localpostgres mysql createdb dropdb migrateup migratedown sqlc test server
