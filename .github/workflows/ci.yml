@@ -50,7 +50,8 @@ jobs:
 
         # queries database with postgres client
       - name: Query database
-        run: psql -h localhost -d simplebank -U root -c 'SELECT 1;'
+        run: PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -d simplebank -U root -c 'SELECT 1;'
+
         env:
           # postgress password is required; alternatively, you can run:
           # `PGPASSWORD=postgres_password psql ...`
