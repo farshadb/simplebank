@@ -13,10 +13,10 @@ jobs:
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:16
         env:
           POSTGRES_USER: root
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: secret
           POSTGRES_DB: simplebank
           POSTGRES_PORT: 5432
         ports:
@@ -58,6 +58,6 @@ jobs:
       - name: Test
         run: PGPASSWORD=$POSTGRES_PASSWORD make test
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: secret
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
