@@ -43,22 +43,6 @@ jobs:
           sudo mv migrate /bin/migrate
           which migrate
 
-      - name: Install PostgreSQL client
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes postgresql-client
-
-        # queries database with postgres client
-      - name: Query database
-        run: PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -d simplebank -U root -c 'SELECT 1;'
-
-        env:
-          # postgress password is required; alternatively, you can run:
-          # `PGPASSWORD=postgres_password psql ...`
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-
       - name: Run migrations
         run: make migrateup
 
@@ -68,17 +52,11 @@ jobs:
           sudo systemctl restart postgresql
           sudo systemctl status postgresql
 
-      - name: Get dependencies
-        run: |
-          go get github.com/stretchr/testify/require
-          go get github.com/lib/pq
-          go get github.com/stretchr/testify/require
-
       - name: Tidy
         run: go mod tidy
 
       - name: Test
-        run: PGPASSWORD=$POSTGRES_PASSWORD go test -v -cover -race ./...
+        run: PGPASSWORD=$POSTGRES_PASSWORD make test
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_HOST: localhost
