@@ -6,15 +6,21 @@ import (
 	"fmt"
 )
 
-// ? Store provides all functions to execute db aueries and transactions
-type Store struct {
+// ? SQLStore provides all functions to execute db aueries and transactions
+type Store interface {
+	Querier
+	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
+}
+
+// ? SQLStore provides all functions to execute db aueries and transactions
+type SQLStore struct {
 	*Queries
 	db *sql.DB
 }
 
 // NewStore creates a new Store
-func NewStore(db *sql.DB) *Store {
-	return &Store{
+func NewStore(db *sql.DB) *SQLStore {
+	return &SQLStore{
 		db:      db,
 		Queries: New(db),
 	}
@@ -24,7 +30,7 @@ func NewStore(db *sql.DB) *Store {
 // ? Create a new Queries object with that transaction and calls callback function with the created queries
 // ? and finally commit or rollback the transaction based on the error that returnes from that functoin
 // this functin is unexported
-func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
+func (store *SQLStore) execTx(ctx context.Context, fn func(*Queries) error) error {
 	//starts new transactoin with calling TxOptions
 	// this option allows us  to set custom isolaiton level of this transation
 	// and if we don't set it explicitly then deafual isolation level will be used
@@ -64,7 +70,7 @@ type TransferTxResult struct {
 
 // ? TransferTx perform a money transfer form one account to the other.
 // ? It creates a tansfer record, add account enteries, and update account's balance witin a single database tansactions
-func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
+func (store *SQLStore) TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error) {
 	var result TransferTxResult
 
 	// this is callback function
