@@ -12,6 +12,7 @@ createdb:
 
 dropdb:
 	docker exec -it bank dropdb simplebank
+	
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simplebank?sslmode=disable" -verbose up
 
@@ -27,4 +28,7 @@ test:
 server: 
 	go run main.go
 
-.PHONY:	postgres localpostgres mysql createdb dropdb migrateup migratedown sqlc test server
+mock:
+	mockgen -package mockdb -destination db/mock/store.go  github.com/lordfarshad/simplebank/db/sqlc Store
+
+.PHONY:	postgres localpostgres mysql createdb dropdb migrateup migratedown sqlc test server mock
