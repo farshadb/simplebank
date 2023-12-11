@@ -39,7 +39,7 @@ test:
   script:
     - apt-get update && apt-get install -y curl
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
-    - mv migrate.linux-amd64 /bin/migrate
+    - mv migrate /bin/migrate
     - which migrate
     - make migrateup
     - go mod tidy
