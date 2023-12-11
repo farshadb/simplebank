@@ -1,19 +1,15 @@
-image: docker:19.03.12
-
-services:
-  - docker:19.03.12-dind
+image: golang:1.21.4
 
 variables:
-  DOCKER_DRIVER: overlay2
   POSTGRES_USER: root
   POSTGRES_PASSWORD: secret
   POSTGRES_DB: simplebank
-  POSTGRES_PORT: 5432
   POSTGRES_HOST: postgres
+  POSTGRES_PORT: 5432
 
-cache:
-  paths:
-    - .go/cache
+services:
+  - name: postgres:13-alpine
+    alias: postgres
 
 stages:
   - prepare
@@ -22,7 +18,6 @@ stages:
 
 prepare:
   stage: prepare
-  image: golang:1.21.4
   script:
     - go mod download
     - go mod verify
@@ -33,7 +28,6 @@ prepare:
 
 build:
   stage: build
-  image: golang:1.21.4
   script:
     - go build -o app .
   artifacts:
@@ -42,17 +36,12 @@ build:
 
 test:
   stage: test
-  image: golang:1.21.4
-  services:
-    - postgres:16-alpine
   script:
+    - apt-get update && apt-get install -y curl
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
-    - mv migrate /bin/migrate
+    - mv migrate.linux-amd64 /usr/local/bin/migrate
     - which migrate
     - make migrateup
-    - sudo systemctl enable postgresql
-    - sudo systemctl restart postgresql
-    - sudo systemctl status postgresql
     - go mod tidy
     - PGPASSWORD=$POSTGRES_PASSWORD make test
   only:
