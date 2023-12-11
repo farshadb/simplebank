@@ -1,0 +1,37 @@
+stages:
+  - test
+
+variables:
+  POSTGRES_USER: root
+  POSTGRES_PASSWORD: secret
+  POSTGRES_DB: simplebank
+  POSTGRES_PORT: 5432
+
+before_script:
+  - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+test:
+  stage: test
+  image: golang:1.21.4
+  services:
+    - postgres:16-alpine
+  script:
+    - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
+    - mv migrate /bin/migrate
+    - which migrate
+    - make migrateup
+    - sudo systemctl enable postgresql
+    - sudo systemctl restart postgresql
+    - sudo systemctl status postgresql
+    - go mod tidy
+    - PGPASSWORD=$POSTGRES_PASSWORD make test
+  only:
+    - master
+  variables:
+    POSTGRES_PASSWORD: secret
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: 5432
