@@ -1,11 +1,19 @@
-stages:
-  - test
+image: docker:19.03.12
+
+services:
+  - docker:19.03.12-dind
 
 variables:
+  DOCKER_DRIVER: overlay2
   POSTGRES_USER: root
   POSTGRES_PASSWORD: secret
   POSTGRES_DB: simplebank
   POSTGRES_PORT: 5432
+  POSTGRES_HOST: postgres
+
+cache:
+  paths:
+    - .go/cache
 
 before_script:
   - "which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )"
@@ -13,6 +21,31 @@ before_script:
   - ssh-add <(echo "$SSH_PRIVATE_KEY")
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+stages:
+  - prepare
+  - build
+  - test
+
+prepare:
+  stage: prepare
+  image: golang:1.21.4
+  script:
+    - go mod download
+    - go mod verify
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-go-modules
+    paths:
+      - .go/cache
+
+build:
+  stage: build
+  image: golang:1.21.4
+  script:
+    - go build -o app .
+  artifacts:
+    paths:
+      - app
 
 test:
   stage: test
