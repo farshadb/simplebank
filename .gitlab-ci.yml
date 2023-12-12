@@ -42,7 +42,7 @@ test:
     - which migrate
     - sudo systemctl enable postgresql
     - sudo systemctl restart postgresql
-    - sudo systemctl status postgresqls
+    - sudo systemctl status postgresql
     - sudo systemctl enable docker
     - sudo systemctl restart docker
     - sudo systemctl status docker
