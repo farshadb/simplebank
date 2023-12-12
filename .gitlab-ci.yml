@@ -43,11 +43,10 @@ test:
     - sudo systemctl enable postgresql
     - sudo systemctl restart postgresql
     - sudo systemctl status postgresql
-    - sudo systemctl enable docker
-    - sudo systemctl restart docker
-    - sudo systemctl status docker
+    - sudo psql -h localhost -U postgres -c "CREATE DATABASE simplebank;"
+    - PGPASSWORD=your_password sudo psql -h localhost -U postgres -c "CREATE USER farsahd WITH PASSWORD 'secret';"
+    - PGPASSWORD=your_password sudo psql -h localhost -U postgres -d simplebank -c "GRANT ALL PRIVILEGES ON DATABASE simplebank TO farshad;"
     - make migrateup
-    - go mod tidy
     - PGPASSWORD=$POSTGRES_PASSWORD make test
   only:
     - master
