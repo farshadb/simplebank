@@ -40,6 +40,8 @@ test:
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
     - mv migrate /bin/migrate
     - which migrate
+    -make createdb
+    - make grant
     - make migrateup
     - go mod tidy
     - PGPASSWORD=$POSTGRES_PASSWORD make test
