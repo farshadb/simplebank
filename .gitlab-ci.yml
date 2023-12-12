@@ -36,7 +36,7 @@ build:
 test:
   stage: test
   script:
-    - apt-get update && apt-get install -y curl
+    - apt-get update && apt-get install -y curl && apt-get install -y curl postgresql-client
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
     - mv migrate /bin/migrate
     - which migrate
