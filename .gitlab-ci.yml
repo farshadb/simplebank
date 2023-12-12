@@ -40,12 +40,12 @@ test:
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
     - mv migrate /bin/migrate
     - which migrate
-    - sudo systemctl enable postgresql
-    - sudo systemctl restart postgresql
-    - sudo systemctl status postgresql
-    - sudo psql -h localhost -U postgres -c "CREATE DATABASE simplebank;"
-    - PGPASSWORD=your_password sudo psql -h localhost -U postgres -c "CREATE USER farsahd WITH PASSWORD 'secret';"
-    - PGPASSWORD=your_password sudo psql -h localhost -U postgres -d simplebank -c "GRANT ALL PRIVILEGES ON DATABASE simplebank TO farshad;"
+    - systemctl enable postgresql
+    - systemctl restart postgresql
+    - systemctl status postgresql
+    - psql -h localhost -U root -c "CREATE DATABASE simplebank;"
+    - PGPASSWORD=your_password psql -h localhost -U root -c "CREATE USER farsahd WITH PASSWORD 'secret';"
+    - PGPASSWORD=your_password psql -h localhost -U root -d simplebank -c "GRANT ALL PRIVILEGES ON DATABASE simplebank TO farshad;"
     - make migrateup
     - PGPASSWORD=$POSTGRES_PASSWORD make test
   only:
