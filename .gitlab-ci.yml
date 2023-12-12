@@ -40,9 +40,6 @@ test:
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
     - mv migrate /bin/migrate
     - which migrate
-    - systemctl enable postgresql
-    - systemctl restart postgresql
-    - systemctl status postgresql
     - psql -h localhost -U root -c "CREATE DATABASE simplebank;"
     - PGPASSWORD=your_password psql -h localhost -U root -c "CREATE USER farsahd WITH PASSWORD 'secret';"
     - PGPASSWORD=your_password psql -h localhost -U root -d simplebank -c "GRANT ALL PRIVILEGES ON DATABASE simplebank TO farshad;"
