@@ -37,20 +37,18 @@ test:
   stage: test
   script:
     - apt-get update && apt-get install -y curl
-    - apt-get install -y postgresql postgresql-client libpq-dev
     - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz
     - mv migrate /bin/migrate
     - which migrate
-    - psql -h postgres -U root -l
-    - psql -h postgres -U root -du
-    - psql -h postgres -U root -c "CREATE DATABASE simplebank;"
-    - PGPASSWORD=your_password psql -h postgres -U root -c "CREATE USER farsahd WITH PASSWORD 'secret';"
-    - PGPASSWORD=your_password psql -h postgres -U root -d simplebank -c "GRANT ALL PRIVILEGES ON DATABASE simplebank TO farshad;"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U root -c "CREATE DATABASE simplebank;"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U root -c "CREATE USER farsahd WITH PASSWORD 'secret';"
+    - PGPASSWORD=$POSTGRES_PASSWORD psql -h postgres -U root -d simplebank -c "GRANT ALL PRIVILEGES ON DATABASE simplebank TO farshad;"
     - make migrateup
     - PGPASSWORD=$POSTGRES_PASSWORD make test
   only:
     - master
   variables:
+    POSTGRES_USER: root
     POSTGRES_PASSWORD: secret
     POSTGRES_HOST: postgres
     POSTGRES_PORT: 5432
