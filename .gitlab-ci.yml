@@ -8,7 +8,7 @@ variables:
   POSTGRES_PORT: 5432
 
 services:
-  - name: postgres:13-alpine
+  - name: postgres:13
     alias: postgres
 
 stages:
@@ -19,8 +19,7 @@ stages:
 prepare:
   stage: prepare
   script:
-    - go mod download
-    - go mod verify
+    - go mod tidy
   cache:
     key: ${CI_COMMIT_REF_SLUG}-go-modules
     paths:
